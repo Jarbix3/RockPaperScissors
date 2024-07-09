@@ -1,99 +1,104 @@
+let winners = [];
+const choices =['rock','paper','scissors'];
 
 
+function resetGame(){
+    winners = [];
+    document.querySelector('#counter').textContent = 'ROUND 0';
+    document.querySelector('#plyrscore').textContent = '0';
+    document.querySelector('#pcscore').textContent = '0';
+    document.querySelector('#ties').textContent = 'Ties count: 0';
+    document.getElementById("playerchoice").src='images/tie.png';
+    document.getElementById("computerchoice").src='images/tie.png';
+    document.getElementById("winnerimg").src='images/tie.png';
+    document.querySelector('#btn').style.display = 'none';
+    
 
+}
 
-function getComputerChoice()
-{
-    let str = Math.random() ;
-    console.log(str);
-    if(str > 0.6 || str == 0.6)
+function computerSelection(){
+    let choice = choices[Math.floor(Math.random()*choices.length)];
+    console.log(`${choice}`);
+    return choice;
+}
+
+function startGame(){
+    let imgs = document.querySelectorAll('img');
+    imgs.forEach((img) => img.addEventListener('click', () =>
         {
-            str = 'paper';
-        }
-    else if(0.3 <= str &  str < 0.6)
+       if(img.id =='paper' || img.id == 'rock' || img.id == 'scissors')
         {
-            str =  'scissors';
-
+            playRound(img.id);
+            
         }
-    else if(str < 0.3){
+       }))
        
-        str = 'rock';
-    }
-    return str;
-
-}
-
-function getHumanChoice()
-{
-    let choice = prompt('Rock, Paper, Scissors?','');
-    console.log(choice);
-    if (choice != 'Rock' && choice != 'Paper' && choice != 'Scissors' && choice != 'rock' && choice != 'paper' && choice != 'scissors')
-      {
-        choice = prompt('You didn\'t choose correctly','');
-      }
-      return choice;
-
-}
-
-function playRound(humanChoice,computerChoice,hScore,cScore)
-{
+    } 
     
-    humanChoice = humanChoice.toUpperCase()
-    computerChoice = computerChoice.toUpperCase();
-    let winner;
-
-    if((humanChoice == 'PAPER' && computerChoice == 'ROCK') || (humanChoice == 'SCISSORS' && computerChoice == 'PAPER') || (humanChoice == 'ROCK' && computerChoice == 'SCISSORS') )
+function playRound(playerChoice){
+    let wins = checkWins();
+    if(wins >= 5)
     {
-    console.log('You win! ' + humanChoice + ' beats ' + computerChoice + '!');
-     hScore++;
-     winner = 'human';
+        return;
     }
+    const computerChoice = computerSelection();
+    const winner = checkWinner(playerChoice,computerChoice);
 
-    else if(humanChoice == computerChoice)
-    {
-     console.log('You tied! ' + computerChoice + ' and ' + humanChoice + ' are the same!');
-     winner = 'neither';
+    winners.push(winner);
+    countWins();
+    displayRound(playerChoice,computerChoice,winner);
+    wins = checkWins();
+    if(wins == 5){
+        displayEnd();
     }
-    else
-    {
-     console.log('You lost! ' + computerChoice + ' beats ' + humanChoice + '!')
-        cScore++;
-        winner = 'computer'
-
-    }
-    return(winner);
 }
 
-function playGame()
+function displayEnd()
 {
-    let humanScore = 0, computerScore = 0;
-
-for(let i = 1; i < 6; i++)
-{
-    const humanSelection = getHumanChoice();
-    const computerSelection = getComputerChoice();
-    
-  if(  playRound(humanSelection,computerSelection,humanScore,computerScore) == 'human')
-  {
-    humanScore++;
-  }
-  else computerScore++;
-
-
-}
-if(humanScore > computerScore)
-    {
-        alert('YOU WON!!!!');
+    let playerWins = winners.filter((item) => item == "player").length;
+    if(playerWins == 5){
+        alert('You won, CONGRATS!!');
     }
-else if(computerScore > humanScore)
-    {
+    else{
         alert('You lost :(');
     }
-else
+    document.querySelector('#btn').style.display = 'flex';
+
+}
+
+function countWins()
+{   const pWinCount = winners.filter((item) => item == 'player').length;
+    const cWinCount = winners.filter((item) => item == 'robot').length;
+    const ties = winners.filter((item) => item == 'tie').length;
+    const rounds = winners.length;
+    document.querySelector('#plyrscore').textContent = `${pWinCount}`;
+    document.querySelector('#pcscore').textContent = `${cWinCount}`;
+    document.querySelector('#ties').textContent = `Ties count = ${ties}`;
+    document.querySelector('#counter').textContent = `ROUND ${rounds}`;
+
+}
+
+function displayRound(playerChoice,computerChoice,winner)
 {
-    alert('you tied!!');
-}
+    document.getElementById("playerchoice").src=`images/${playerChoice}.png`;
+    document.getElementById("computerchoice").src=`images/${computerChoice}.png`;
+    document.getElementById("winnerimg").src=`images/${winner}.png`;
 
 }
 
-playGame();
+function checkWins(){
+const pWinCount = winners.filter((item) => item == 'player').length;
+const cWinCount = winners.filter((item) => item == 'robot').length; 
+return Math.max(pWinCount,cWinCount);
+}
+
+function checkWinner(userChoice,pcChoice)
+{
+    if(userChoice == 'rock' && pcChoice == 'scissors' || userChoice == 'paper' && pcChoice == 'rock' || userChoice == 'scissors' && pcChoice == 'paper')
+    {return 'player';}
+    else if(userChoice == pcChoice)
+    {return 'tie';}
+    else return 'robot';
+}
+
+startGame();

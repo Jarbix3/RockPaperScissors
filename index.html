@@ -2,12 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="myscript.js"></script>
+    
+    <link rel="stylesheet" href="stylee.css">
+    <script src="myscript.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <body>
-   
+    <div id="app">
+        <div id="round">
+            <p id="counter">ROUND 0</p>
+        </div>
+   <div id="plyrbuttons">
+        <img src="images/rock.png" id="rock" class="img">
+        <img src="images/paper.png" id="paper" class="img">
+        <img src="images/scissors.png" id="scissors" class="img">
+   </div>
+   <div id="winner">
+    <p>ROUND WINNER:</p><img id="winnerimg" src="images/tie.png">
+   </div>
+
     
+    <div id="pcbuttons">
+ 
+        <img src="images/rock.png" class="img">
+        <img src="images/paper.png" class="img">
+        <img src="images/scissors.png" class="img">
+    </div>
+
+    <div id="scores">
+        <div id="plyrchoice">
+            <p>YOUR CHOICE:</p><img id="playerchoice" src="images/tie.png">
+            </div>
+        <div id="score">
+            <p id="plyrscore">0</p>-
+            <p id="pcscore">0</p>
+        </div>  
+        <div id="pcchoice">
+            <p>PC CHOICE:</p><img id="computerchoice" src="images/tie.png">
+            </div>
+    </div>
+    <div id="container">
+    <div id="ties">
+        <p id="tiestxt">Ties count: 0</p>
+
+    </div>
+</div>
+    <div id="btn">
+    <button id="retry" onclick="resetGame()">PLAY AGAIN!</button>
+    </div>
+</div>
+
 </body>
 </html>
